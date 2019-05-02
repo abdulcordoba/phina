@@ -28,21 +28,15 @@ def elements():
             #if i > 10: return
             yield (i, row[0][:-1])
 
-def id(x):
-    return x
-
-session = None    
-
 def main():
     global session
-    session = init_session()
     logger.add("file_{time}.log", level="INFO", enqueue=True)
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+    with concurrent.futures.ProcessPoolExecutor() as executor:
         for x in executor.map(get_data, elements(), chunksize=1000):
             #print(str(x[0]) + ',' + ','.join(x[1:]))
             logger.info(','.join(x))
-    
+
 #    with open('nucleos.csv', encoding='latin1') as csv_file:
 #        csv_reader = csv.reader(csv_file, delimiter=',')
 #        i = 1
@@ -55,9 +49,9 @@ def main():
 
 
 def get_data(args):
-    global session
     logger.debug("Get data for {}->{}", args[0], args[1])
 
+    session = init_session()
     i = 0
     r = ''
     while True:
@@ -68,12 +62,16 @@ def get_data(args):
             session = init_session()
         except BaseException as error:
             logger.debug("Excepcion {}, reintentando {}", error, args[0])
-        
+
     soup = BeautifulSoup(r.content, 'html.parser')
 
-    inscripcion = soup.find(attrs={'name':'txtFecha'})['value']
-    ejidatarios = soup.find(attrs={'name':'txt_AsentH2'})['value']
-    avecindados = soup.find(attrs={'name':'txt_Reser2'})['value']
+    try:
+        inscripcion = soup.find(attrs={'name':'txtFecha'})['value']
+        ejidatarios = soup.find(attrs={'name':'txt_AsentH2'})['value']
+        avecindados = soup.find(attrs={'name':'txt_Reser2'})['value']
+    except TypeError:
+        logger.error("No se pudo parsear {}, {}", r, args[0])
+        return (str(args[0]), args[1], '', '', '')
 
     logger.debug("Got data for {}: {} {} {}", args[0], inscripcion, ejidatarios, avecindados)
     return (str(args[0]), args[1], inscripcion, ejidatarios, avecindados)
