@@ -1,7 +1,7 @@
 #!/bin/bash
 
 randsleep() {
-    x=$(jot -r 1 20 30)
+    x=$((20 + RANDOM % 10))
     echo "About to sleep $x seconds"
     sleep $x
 }
