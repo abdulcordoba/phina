@@ -13,7 +13,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 DATA_URL = 'https://phina.ran.gob.mx/lib/x_consultaPhina.php?idPhina=%s&intOpc=1'
 
 # Crear sesión autenticada (puede causar excepción, ni modo!)
-def init_session(timeout=3):
+def init_session(timeout=15):
     url = 'https://phina.ran.gob.mx/x_acceso.php'
     values = {'email': 'jcordoba@iadb.org',
               'pass': '93b48efe56'}
