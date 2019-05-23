@@ -63,7 +63,7 @@ def get_data(session, args):
             break
         except requests.exceptions.Timeout:
             # reintentar con sesión nueva
-            session = init_session(n)
+            session = init_session()
         except BaseException as error:
             # whatever...
             logger.debug("Excepcion {}, reintentando {}", error, args[0])
@@ -72,7 +72,7 @@ def get_data(session, args):
 
     try:
         inscripcion = soup.find(attrs={'name':'txtFecha'})['value']
-        ejidatarios = soup.find(attrs={'name':'txt_AsentH2'})['value']
+        ejidatarios = soup.find(attrs={'name':'txt_Parcelada2'})['value']
         avecindados = soup.find(attrs={'name':'txt_Reser2'})['value']
     except TypeError:
         # wanna cry :,(
