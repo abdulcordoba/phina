@@ -81,7 +81,8 @@ def get_data(session, args):
 
     logger.debug("Got data for {}: {} {} {}", args[0], inscripcion, ejidatarios, avecindados)
     # This is what I will actually filter 
-    logger.info(','.join((str(args[0]), args[1], inscripcion, ejidatarios, avecindados)) )
+    words = map(str, [args[0], args[1], inscripcion, ejidatarios, avecindados])
+    logger.info(', '.join('"{0}"'.format(w) for w in words))
     # This value is just ignored
     return (str(args[0]), args[1], inscripcion, ejidatarios, avecindados)
 
